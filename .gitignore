@@ -1,6 +1,7 @@
 # Personal data — do not commit.
 # Anchored to the repo root so examples/user_data/ (committed templates) is NOT ignored.
-/user_data/
+# No trailing slash: must also match when user_data is a symlink to an external dir.
+/user_data
 *.private.*
 .env
 
