@@ -24,19 +24,23 @@ paths over a 35-year horizon.
 **Live demo:** [variometer.streamlit.app](https://variometer.streamlit.app/) —
 the UI on the placeholder persona, nothing to install.
 
-## Install and run
+## Run it
+
+No install needed — [uv](https://docs.astral.sh/uv/) fetches and runs it:
 
 ```bash
-pip install variometer          # or: uv tool install variometer
-uvx variometer ui               # or zero-install with uvx
+uvx variometer                  # configuration status + command reference
+uvx variometer ui               # the Streamlit app on :8501
+uvx variometer explain --list   # every scenario you can name
 
-variometer                      # configuration status + command reference
-variometer explain --list       # every scenario you can name
-variometer explain sabbatical --start-year 2030 --return-year 2033
-variometer ui                   # launch the Streamlit app on :8501
+uv tool install variometer      # or install it, and drop the `uvx` prefix
 ```
 
-From a checkout, for development or to work on the model itself:
+Point `VARIOMETER_USER_DATA` at your own data directory — see
+[Make it yours](#make-it-yours). Required under `uvx`, which runs from a cache
+dir.
+
+From a checkout:
 
 ```bash
 uv sync                                     # install deps
@@ -94,10 +98,11 @@ user_data/
 3. Relaunch. The sidebar, every scenario, and the CLI now start from *your*
    baseline.
 
-From an installed package rather than a checkout, point
-`VARIOMETER_USER_DATA` at wherever you keep that directory. Setting it to the
-empty string disables the private layer entirely and runs the placeholder
-persona.
+Without a checkout there's no repo to hold `user_data/` — keep it anywhere and
+point `VARIOMETER_USER_DATA` at it (templates:
+[examples/user_data/](https://github.com/JoshuaC215/variometer/tree/main/examples/user_data)).
+Setting it to the empty string disables the private layer entirely and runs the
+placeholder persona.
 
 If you use [Monarch Money](https://www.monarchmoney.com/) with Claude Code,
 the `bootstrap-from-monarch` skill can pre-fill most of `profile.json` from
