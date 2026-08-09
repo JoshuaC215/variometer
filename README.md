@@ -24,19 +24,36 @@ paths over a 35-year horizon.
 **Live demo:** [variometer.streamlit.app](https://variometer.streamlit.app/) —
 the UI on the placeholder persona, nothing to install.
 
-## Install and run
+## Run it
+
+**Nothing to install.** With [uv](https://docs.astral.sh/uv/), `uvx` fetches
+Variometer into a throwaway environment and runs it:
 
 ```bash
-pip install variometer          # or: uv tool install variometer
-uvx variometer ui               # or zero-install with uvx
-
-variometer                      # configuration status + command reference
-variometer explain --list       # every scenario you can name
-variometer explain sabbatical --start-year 2030 --return-year 2033
-variometer ui                   # launch the Streamlit app on :8501
+uvx variometer                  # configuration status + command reference
+uvx variometer ui               # launch the Streamlit app on :8501
+uvx variometer explain --list   # every scenario you can name
+uvx variometer explain sabbatical --start-year 2030 --return-year 2033
 ```
 
-From a checkout, for development or to work on the model itself:
+Add `@latest` (`uvx variometer@latest ui`) to skip uv's cache and pick up a new
+release.
+
+**Keep it around.** `uv tool install` puts a persistent `variometer` on your
+PATH, so you can drop the `uvx` prefix:
+
+```bash
+uv tool install variometer      # then: variometer ui, variometer explain --list
+uv tool upgrade variometer
+```
+
+`pip install variometer` into a virtualenv works too, if that's your setup.
+
+Either way, point `VARIOMETER_USER_DATA` at your own data directory — see
+[Make it yours](#make-it-yours). It's not optional under `uvx`, which runs from
+a cache directory with no repo alongside it.
+
+**From a checkout**, for development or to work on the model itself:
 
 ```bash
 uv sync                                     # install deps
@@ -94,10 +111,18 @@ user_data/
 3. Relaunch. The sidebar, every scenario, and the CLI now start from *your*
    baseline.
 
-From an installed package rather than a checkout, point
-`VARIOMETER_USER_DATA` at wherever you keep that directory. Setting it to the
-empty string disables the private layer entirely and runs the placeholder
-persona.
+Running from `uvx` or `uv tool` rather than a checkout, there's no repo to put
+`user_data/` next to: keep the directory wherever you like (the templates are
+in [examples/user_data/](https://github.com/JoshuaC215/variometer/tree/main/examples/user_data))
+and point `VARIOMETER_USER_DATA` at it.
+
+```bash
+export VARIOMETER_USER_DATA=~/finance/variometer_data
+uvx variometer                  # confirms the private layer is on
+```
+
+Setting it to the empty string disables the private layer entirely and runs the
+placeholder persona.
 
 If you use [Monarch Money](https://www.monarchmoney.com/) with Claude Code,
 the `bootstrap-from-monarch` skill can pre-fill most of `profile.json` from
