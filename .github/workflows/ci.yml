@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: py${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    env:
+      # Every `uv` command in this job targets the matrix interpreter.
+      UV_PYTHON: ${{ matrix.python-version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          python-version: ${{ matrix.python-version }}
+
+      # `--locked` fails loudly if uv.lock has drifted from pyproject.toml,
+      # rather than silently re-resolving to a different dependency set.
+      - name: Install dependencies
+        run: uv sync --locked
+
+      - name: Lint (ruff check)
+        run: uv run ruff check
+
+      - name: Format (ruff format --check)
+        run: uv run ruff format --check
+
+      # The public suite only. The gitignored user_data/ private layer never
+      # exists in CI, so tests run on the placeholder persona — deterministic
+      # for everyone.
+      - name: Tests
+        run: uv run pytest

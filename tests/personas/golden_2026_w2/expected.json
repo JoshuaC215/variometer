@@ -1,0 +1,88 @@
+{
+  "_persona": "GOLDEN — plain W-2 wage earner, 2026 epoch year. Expected values were hand-computed from cited primary sources BEFORE the model was run against them; they are not model output. See docs/GOLDEN_CASES.md.",
+  "_do_not_repin": "These are external anchors, not self-consistency pins. If one of them moves, the model disagrees with the cited source — investigate the model, do not re-pin. scripts/repin_personas.py must always report 0 moved here.",
+  "_sources": {
+    "rp_25_32": "IRS Rev. Proc. 2025-32 — 2026 single brackets (10% to 12,400 / 12% to 50,400 / 22% to 105,700 / 24% to 201,775 / 32% to 256,225 / 35% to 640,600 / 37% above) and standard deduction $16,100. https://www.irs.gov/pub/irs-drop/rp-25-32.pdf",
+    "n_25_67": "IRS Notice 2025-67 — 2026 §402(g) elective deferral limit $24,500. https://www.irs.gov/pub/irs-drop/n-25-67.pdf",
+    "ssa_2025_10_24": "SSA announcement 2025-10-24 — 2026 Social Security wage base $184,500; max employee SS tax $11,439 (6.2%).",
+    "irc_3101b2": "IRC §3101(b)(2) — Additional Medicare Tax 0.9% on wages over $200,000 (single). Statutory, unindexed.",
+    "ca_edd_2026": "CA EDD 2026 rates — SDI 1.3%, uncapped. https://edd.ca.gov/en/payroll_taxes/rates_and_withholding"
+  },
+  "_excluded": "CA bracket-derived fields (ca_taxable, ca_income_tax, total_tax, take_home, effective_tax_rate) carry no golden claim — the 2026 CA tables are still projected from 2025 actuals.",
+  "w2_200k": {
+    "_source": "base_salary 200,000; everything else zeroed. Wages sit exactly ON the $200,000 Additional Medicare threshold.",
+    "annual_summary": {
+      "_tolerance": 0.005,
+      "2026": {
+        "_gross_income": "wages only: 200,000",
+        "gross_income": 200000.00,
+        "_agi": "gross 200,000 − pre-tax deferral 0 = 200,000",
+        "agi": 200000.00,
+        "_fed_taxable": "AGI 200,000 − standard deduction 16,100 [rp_25_32] = 183,900",
+        "fed_taxable": 183900.00,
+        "_federal_income_tax": "bracket walk [rp_25_32]: 0.10x12,400=1,240 + 0.12x(50,400-12,400)=4,560 + 0.22x(105,700-50,400)=12,166 + 0.24x(183,900-105,700)=18,768 => 36,734.00",
+        "federal_income_tax": 36734.00,
+        "_contributions_pretax": "no deferral elected",
+        "contributions.pretax": 0.00,
+        "_fica_social_security": "min(200,000, 184,500) x 6.2% = 11,439.00 [ssa_2025_10_24] — the published max employee SS tax",
+        "fica.social_security": 11439.00,
+        "_fica_medicare": "200,000 x 1.45% = 2,900.00",
+        "fica.medicare": 2900.00,
+        "_fica_additional_medicare": "max(0, 200,000 - 200,000) x 0.9% = 0.00 [irc_3101b2] — AT the threshold, not over it",
+        "fica.additional_medicare": 0.00,
+        "_fica_ca_sdi": "200,000 x 1.3% = 2,600.00 [ca_edd_2026], uncapped",
+        "fica.ca_sdi": 2600.00,
+        "_federal_ltcg_tax": "no capital gain",
+        "federal_ltcg_tax": 0.00,
+        "_niit": "no investment income",
+        "niit": 0.00
+      }
+    }
+  },
+  "w2_300k": {
+    "_source": "base_salary 300,000; everything else zeroed. Above both the SS wage base and the Additional Medicare threshold.",
+    "annual_summary": {
+      "_tolerance": 0.005,
+      "2026": {
+        "_gross_income": "wages only: 300,000",
+        "gross_income": 300000.00,
+        "_agi": "gross 300,000 − pre-tax deferral 0 = 300,000",
+        "agi": 300000.00,
+        "_fed_taxable": "AGI 300,000 − standard deduction 16,100 [rp_25_32] = 283,900",
+        "fed_taxable": 283900.00,
+        "_federal_income_tax": "bracket walk [rp_25_32]: cumulative tax at the 32% top (256,225) = 1,240+4,560+12,166+23,058(0.24x96,075)+17,424(0.32x54,450) = 58,448; + 0.35x(283,900-256,225)=9,686.25 => 68,134.25",
+        "federal_income_tax": 68134.25,
+        "_fica_social_security": "min(300,000, 184,500) x 6.2% = 11,439.00 [ssa_2025_10_24] — capped at the wage base",
+        "fica.social_security": 11439.00,
+        "_fica_medicare": "300,000 x 1.45% = 4,350.00 — Medicare is uncapped",
+        "fica.medicare": 4350.00,
+        "_fica_additional_medicare": "(300,000 - 200,000) x 0.9% = 900.00 [irc_3101b2]",
+        "fica.additional_medicare": 900.00,
+        "_fica_ca_sdi": "300,000 x 1.3% = 3,900.00 [ca_edd_2026], uncapped",
+        "fica.ca_sdi": 3900.00
+      }
+    }
+  },
+  "w2_pretax_max": {
+    "_source": "base_salary 200,000 with a 20%-of-base pre-tax election (desired 40,000) — the §402(g) limit binds.",
+    "annual_summary": {
+      "_tolerance": 0.005,
+      "2026": {
+        "_gross_income": "wages only: 200,000 (the deferral is withheld from, not subtracted before, gross)",
+        "gross_income": 200000.00,
+        "_contributions_pretax": "min(0.20 x 200,000 = 40,000, §402(g) limit 24,500) = 24,500.00 [n_25_67]",
+        "contributions.pretax": 24500.00,
+        "_agi": "gross 200,000 − pre-tax deferral 24,500 = 175,500",
+        "agi": 175500.00,
+        "_fed_taxable": "AGI 175,500 − standard deduction 16,100 [rp_25_32] = 159,400",
+        "fed_taxable": 159400.00,
+        "_federal_income_tax": "bracket walk [rp_25_32]: cumulative tax at the 22% top (105,700) = 1,240+4,560+12,166 = 17,966; + 0.24x(159,400-105,700)=12,888 => 30,854.00",
+        "federal_income_tax": 30854.00,
+        "_fica_social_security": "elective deferrals are FICA wages: min(200,000, 184,500) x 6.2% = 11,439.00 [ssa_2025_10_24] — unchanged by the deferral",
+        "fica.social_security": 11439.00,
+        "_fica_medicare": "200,000 x 1.45% = 2,900.00 — also unchanged by the deferral",
+        "fica.medicare": 2900.00
+      }
+    }
+  }
+}

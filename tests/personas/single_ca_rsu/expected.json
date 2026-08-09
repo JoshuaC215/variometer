@@ -1,0 +1,28 @@
+{
+  "_persona": "Placeholder senior IC — bare Scenario() defaults, no events.",
+  "_note": "Illustrative fiction, not anyone's real numbers. Re-pin only deliberately: uv run python scripts/repin_personas.py tests/personas/single_ca_rsu",
+  "baseline": {
+    "_source": "Scenario() with no events",
+    "net_worth": {
+      "_migrated_from": "tests/test_withdrawals.py::test_no_drawdown_regression_bit_identical",
+      "2026": 412898.11,
+      "2027": 602251.87,
+      "2028": 822692.13,
+      "2029": 1076661.81,
+      "2030": 1303305.77,
+      "2031": 1551690.92,
+      "2032": 1820660.37,
+      "2033": 2111678.83,
+      "2034": 2426309.92,
+      "2035": 2766222.73
+    },
+    "annual_summary": {
+      "_migrated_from": "tests/test_events.py::_SNAPSHOT (test_no_events_matches_snapshot)",
+      "2026": {"gross_income": 375000.00, "total_tax": 137274.26, "take_home": 191305.74},
+      "2027": {"gross_income": 408340.00, "total_tax": 152041.95, "take_home": 208525.55},
+      "2028": {"gross_income": 447830.20, "total_tax": 169975.78, "take_home": 228774.30},
+      "2029": {"gross_income": 488505.11, "total_tax": 188505.85, "take_home": 249575.44},
+      "2030": {"gross_income": 410400.26, "total_tax": 149266.69, "take_home": 209328.96}
+    }
+  }
+}

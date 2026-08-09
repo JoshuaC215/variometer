@@ -1,0 +1,98 @@
+name: Publish
+
+# Tag-driven release: `git tag v0.1.0 && git push origin v0.1.0`.
+# Uses PyPI Trusted Publishing (OIDC) — there is deliberately no API token or
+# secret anywhere in this file. Configure the trusted publisher once on PyPI
+# (project `variometer`, this repo, workflow `publish.yml`, environment `pypi`).
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  test:
+    name: Test before release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: uv sync --locked
+
+      - name: Lint (ruff check)
+        run: uv run ruff check
+
+      # Public suite only — user_data/ is gitignored and never present in CI.
+      - name: Tests
+        run: uv run pytest
+
+  publish:
+    name: Build and publish to PyPI
+    needs: test
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      # Required for Trusted Publishing: lets the job mint an OIDC token that
+      # PyPI exchanges for a short-lived upload credential.
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          python-version: "3.11"
+
+      - name: Build sdist + wheel
+        run: uv build
+
+      # Hard gate: the private layer must never reach a published artifact, and
+      # nothing beyond the package + its metadata may ship. Note this matches a
+      # `user_data` *path component* — a substring grep would false-positive on
+      # the package's own user_data_io.py and fail every release.
+      - name: Check artifact contents
+        run: |
+          uv run --no-project python - <<'PY'
+          import glob, re, sys, tarfile, zipfile
+
+          sdist = glob.glob("dist/*.tar.gz")[0]
+          wheel = glob.glob("dist/*.whl")[0]
+          sd = tarfile.open(sdist).getnames()
+          wh = zipfile.ZipFile(wheel).namelist()
+
+          print("── sdist ──", *sd, sep="\n")
+          print("\n── wheel ──", *wh, sep="\n")
+
+          failed = False
+
+          def fail(msg):
+              global failed
+              print(f"::error::{msg}")
+              failed = True
+
+          for label, names in (("sdist", sd), ("wheel", wh)):
+              leaked = [n for n in names if "user_data" in n.split("/")]
+              if leaked:
+                  fail(f"private layer present in {label}: {leaked}")
+              repo_only = [
+                  n for n in names
+                  if re.search(r"(^|/)(tests|docs|ad_hoc|examples|scripts|\.github|\.venv)/", n)
+              ]
+              if repo_only:
+                  fail(f"repo-only directories present in {label}: {repo_only}")
+              data = [n for n in names if n.endswith((".csv", ".json"))]
+              if data:
+                  fail(f"unexpected data files in {label}: {data}")
+
+          sys.exit(1 if failed else 0)
+          PY
+
+      - name: Publish
+        uses: pypa/gh-action-pypi-publish@release/v1

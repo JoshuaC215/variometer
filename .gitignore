@@ -1,0 +1,34 @@
+# Personal data — do not commit.
+# Anchored to the repo root so examples/user_data/ (committed templates) is NOT ignored.
+/user_data/
+*.private.*
+.env
+
+# Ad-hoc what-ifs are personal by default; only the canonical example and the
+# file behind docs/DEMO.md are tracked (both run on the placeholder persona).
+ad_hoc/*
+!ad_hoc/.gitkeep
+!ad_hoc/example_promo_house_fire.py
+!ad_hoc/demo_quit_2029.py
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+

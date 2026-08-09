@@ -1,0 +1,21 @@
+{
+  "_note": "Example profile — every key is a Scenario field (see variometer/config.py). Keys starting with _ are ignored. Delete the lines that match the defaults and edit the rest with your real numbers.",
+  "age": 33,
+  "base_salary": 245000,
+  "bonus_rate": 0.15,
+  "pay_anchor": "2026-01-09",
+  "price_now": 65.0,
+  "price_now_date": "2026-04-01",
+  "equity_refresh_grant_value": 90000,
+  "refresh_projection_start_year": 2027,
+  "pretax_401k_pct": 0.1,
+  "aftertax_401k_pct": 0.05,
+  "match_rate": 0.5,
+  "match_cap": 7350,
+  "expense_base": 7200,
+  "rent_monthly": 2900,
+  "brokerage_balance": 210000,
+  "brokerage_cost_basis_fraction": 0.6,
+  "pretax_401k_balance": 145000,
+  "roth_ira_annual": 7500
+}
