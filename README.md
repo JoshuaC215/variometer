@@ -21,10 +21,14 @@ paths over a 35-year horizon.
 > tool, released as-is under the MIT license. Sanity-check any real decision
 > with a professional.
 
+**Live demo:** [variometer.streamlit.app](https://variometer.streamlit.app/) —
+the UI on the placeholder persona, nothing to install.
+
 ## Install and run
 
 ```bash
 pip install variometer          # or: uv tool install variometer
+uvx variometer ui               # or zero-install with uvx
 
 variometer                      # configuration status + command reference
 variometer explain --list       # every scenario you can name
@@ -58,14 +62,14 @@ back, without touching the model yourself. Four things make that work:
   a registration, or a UI change. It needs a `.py` file that assigns a
   `Scenario`, which an agent can write in one shot:
   `variometer explain --python ad_hoc/my_what_if.py`.
-- **[CLAUDE.md](CLAUDE.md)** — a full onboarding brief in the repo: the
+- **[CLAUDE.md](https://github.com/JoshuaC215/variometer/blob/main/CLAUDE.md)** — a full onboarding brief in the repo: the
   architecture, the conventions, the things that will trip an agent up. Agents
   read it automatically.
 - **`.claude/skills/`** — packaged recipes for the recurring jobs (add a
   scenario, bootstrap a baseline from Monarch, run a monthly
   model-vs-actuals review).
 
-**[docs/DEMO.md](docs/DEMO.md) is a real transcript of the loop end to end** —
+**[docs/DEMO.md](https://github.com/JoshuaC215/variometer/blob/main/docs/DEMO.md) is a real transcript of the loop end to end** —
 an English question, the file the agent writes, the actual output, and the
 answer the agent gives back.
 
@@ -113,7 +117,7 @@ startup and appear alongside the built-ins. One-off explorations don't need a
 factory at all: drop a file in `ad_hoc/` (or `user_data/ad_hoc/` for personal
 specifics) and run
 `variometer explain --python ad_hoc/my_what_if.py`.
-See [docs/SCENARIOS.md](docs/SCENARIOS.md).
+See [docs/SCENARIOS.md](https://github.com/JoshuaC215/variometer/blob/main/docs/SCENARIOS.md).
 
 ## Using the explainer
 
@@ -160,7 +164,7 @@ anything the scenario itself sets deliberately.
 
 Regression pins keep the model self-consistent, and the 2026 federal tax
 quantities are additionally hand-anchored to cited primary sources (IRS, SSA,
-EDD, HHS) — see [docs/GOLDEN_CASES.md](docs/GOLDEN_CASES.md) for exactly what
+EDD, HHS) — see [docs/GOLDEN_CASES.md](https://github.com/JoshuaC215/variometer/blob/main/docs/GOLDEN_CASES.md) for exactly what
 that does and doesn't claim.
 
 ## Scope today
@@ -172,14 +176,14 @@ CLI warn when the pinned tables go stale. Widening the envelope (married
 filing jointly, more states, more income shapes) is where the roadmap goes
 next. Also not modeled yet: ISOs/ESPP/AMT, HSA, rental property, holding RSUs
 past vest. Details in
-[docs/ASSUMPTIONS_AND_RISKS.md](docs/ASSUMPTIONS_AND_RISKS.md).
+[docs/ASSUMPTIONS_AND_RISKS.md](https://github.com/JoshuaC215/variometer/blob/main/docs/ASSUMPTIONS_AND_RISKS.md).
 
 ## Support
 
 Best-effort, single maintainer, no SLA. Issues and PRs are welcome and will be
 read; a response — let alone a fix — is not guaranteed. The tax tables get an
 annual refresh as the authorities publish (the routine is described in
-[CONTRIBUTING.md](CONTRIBUTING.md)); everything else happens when it happens.
+[CONTRIBUTING.md](https://github.com/JoshuaC215/variometer/blob/main/CONTRIBUTING.md)); everything else happens when it happens.
 
 This is a planning tool, not a tax engine and not an advisor. Use it to
 compare shapes of decisions, not to compute a number you'll file or wire money
@@ -188,8 +192,8 @@ against, and sanity-check any real decision with a professional.
 ## Learn more
 
 Design, scenario authoring, and the yearly assumptions checklist live in
-[docs/](docs/); [CLAUDE.md](CLAUDE.md) onboards agents.
-[CONTRIBUTING.md](CONTRIBUTING.md) covers dev setup, how the pins work, and
+[docs/](https://github.com/JoshuaC215/variometer/tree/main/docs); [CLAUDE.md](https://github.com/JoshuaC215/variometer/blob/main/CLAUDE.md) onboards agents.
+[CONTRIBUTING.md](https://github.com/JoshuaC215/variometer/blob/main/CONTRIBUTING.md) covers dev setup, how the pins work, and
 what a reviewable PR looks like.
 
 MIT © Joshua Carroll
