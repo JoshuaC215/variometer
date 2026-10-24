@@ -102,6 +102,13 @@ ignore = [
     "B017",   # blind `Exception` in test_events.py is intentional (dataclass frozen test)
 ]
 
+[tool.uv]
+# eMudhra/emSign CA incident (Oct 2026): older uv builds and certifi bundles
+# still trust the revoked emSign root. Refuse to run with an affected uv, and
+# never lock certifi (pulled in transitively via requests) below the fix.
+required-version = ">=0.13.4"
+constraint-dependencies = ["certifi>=2026.10.19"]
+
 [tool.ruff.lint.per-file-ignores]
 # Tests can have long parametrize tables, fixture-style imports, etc.
 "tests/**/*.py" = ["B011"]
